@@ -69,7 +69,7 @@ contract SushiSwapWallet {
         // We can use unchecked to save gas because amounts have already been checked.
         unchecked {
             balances[msg.sender][token1] -= amount1;
-            balances[msg.sender][token1] -= amount2;
+            balances[msg.sender][token2] -= amount2;
         }
 
         _addLiquidity(token1, token2, amount1, amount2);
@@ -109,7 +109,7 @@ contract SushiSwapWallet {
 
         unchecked {
             balances[msg.sender][token1] -= amount1;
-            balances[msg.sender][token1] -= amount2;
+            balances[msg.sender][token2] -= amount2;
         }
         _addLiquidity(token1, token2, amount1, amount2);
         _deposit(token, pid, to);
@@ -166,10 +166,13 @@ contract SushiSwapWallet {
      */
     function _deposit(address token, uint256 pid, address to) internal {
         uint256 balance = IERC20(token).balanceOf(address(this));
-        IERC20(token).approve(MASTER_CHEF, balance);
 
-        if (to != address(0))
+        if (to != address(0)) {
+            IERC20(token).approve(MASTER_CHEF_V2, balance);
             IMasterChef(MASTER_CHEF_V2).deposit(pid, balance, to);
-        else IMasterChef(MASTER_CHEF).deposit(pid, balance);
+            return;
+        }
+        IERC20(token).approve(MASTER_CHEF, balance);
+        IMasterChef(MASTER_CHEF).deposit(pid, balance);
     }
 }
