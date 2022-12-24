@@ -3,6 +3,7 @@ require('dotenv').config({
 })
 require('@nomicfoundation/hardhat-toolbox')
 require('solidity-docgen')
+const { sync } = require('./tasks/sync')
 
 const ALCHEMY_KEY = process.env.ALCHEMY_KEY
 const API_KEY_SCAN = process.env.API_KEY_SCAN ?? ''
@@ -52,3 +53,5 @@ module.exports = {
     },
   },
 }
+
+task('sync', 'Sync new SushiSwap Liquidity Pools', sync)

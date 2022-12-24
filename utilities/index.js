@@ -1,4 +1,5 @@
 const { ethers } = require('hardhat')
+const fs = require('fs')
 const { FACTORY } = require('../data/addresses.json').mainnet
 
 const {
@@ -59,9 +60,23 @@ const getBytes32Address = (address) => {
   }
   return address
 }
+
+const getPID = (address, file) => {
+  const data = fs.readFileSync(file, (err) => {
+    if (err) console.log(err)
+  })
+  const dataParsed = JSON.parse(data)
+  for (i = 0; i < dataParsed.length; i++) {
+    if (address.toUpperCase() === dataParsed[i].address.toUpperCase())
+      return dataParsed[i].pid
+  }
+  return dataParsed.length
+}
 module.exports = {
   getFunctionBytecode,
   getBytecodeWallet,
   getBytes32Address,
   getCreate2Address,
+  getPID,
+  calculateUniswapSLPAddress,
 }

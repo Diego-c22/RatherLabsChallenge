@@ -38,7 +38,7 @@ describe('Unit Tests', async () => {
     globalThis.mockMasterChefV2 = mockMasterChefV2
   })
 
-  describe('Wallet', async () => {
+  describe('SushiSwapWallet', async () => {
     beforeEach(async () => {
       const { walletContract } = await loadFixture(deployWalletFixture)
       globalThis.walletContract = walletContract

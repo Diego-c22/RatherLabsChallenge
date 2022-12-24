@@ -1,8 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.4;
 
-import 'hardhat/console.sol';
-
 interface IERC20Short {
     function approve(address spender_, uint256 amount_) external;
 
@@ -45,41 +43,34 @@ contract SelfDestructWallet {
      * @dev If 'to' is different to address(0) it will be used MasterChefV2.
      * @param token1 Address of first token in the liquidity pool.
      * @param token2 Address of second token in the liquidity pool.
-     * @param amount1 Amount of tokens desired for first token in the liquidity pool.
-     * @param token1 Amount of tokens desired for second token in the liquidity pool.
      * @param pid PID of liquidity pool.
      * @param token SLP token address.
-     * * @param to Address to use as depositor
+     * @param to Address to use as depositor
      */
     constructor(
         address token1,
         address token2,
-        uint256 amount1,
-        uint256 amount2,
         uint256 pid,
         address token,
         address to
     ) {
-        console.log('ADDRESS', address(this));
+        uint256 amount1 = IERC20Short(token1).balanceOf(address(this));
+        uint256 amount2 = IERC20Short(token2).balanceOf(address(this));
         IERC20Short(token1).approve(ROUTER, amount1);
         IERC20Short(token2).approve(ROUTER, amount2);
-        console.log('Approved');
         IUniswapV2Router(ROUTER).addLiquidity(
             token1,
             token2,
             amount1,
             amount2,
-            amount1 / 10,
-            amount2 / 100,
+            0,
+            0,
             address(this),
             block.timestamp
         );
-        console.log('Liquided');
         uint256 balance = IERC20Short(token).balanceOf(address(this));
         IERC20Short(token).approve(MASTER_CHEF, balance);
-        console.log('approved');
         IChef(MASTER_CHEF).deposit(pid, balance, to);
-        console.log('deposited');
         selfdestruct(payable(msg.sender));
     }
 }

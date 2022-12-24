@@ -4,7 +4,7 @@ const { AddressZero } = ethers.constants
 
 exports.deposit = () => {
   context('#deposit', async () => {
-    it("Should increase user's ether balance.", async () => {
+    it('Should increase WalletContract ether balance.', async () => {
       const address = await globalThis.signers[0].getAddress()
       const value = ethers.BigNumber.from(10)
       await globalThis.walletContract.deposit(AddressZero, 0, { value })
