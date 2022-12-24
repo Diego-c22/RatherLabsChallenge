@@ -25,6 +25,11 @@ interface IMasterChef {
 
     function lpToken(uint256) external view returns (address);
 
+    function userInfo(
+        uint256 _pid,
+        address _user
+    ) external view returns (UserInfo memory);
+
     function poolInfo(
         uint256 pid
     ) external view returns (IMasterChef.PoolInfo memory);
