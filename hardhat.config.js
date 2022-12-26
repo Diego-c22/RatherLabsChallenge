@@ -9,10 +9,14 @@ const { sync } = require('./tasks/sync')
 const ALCHEMY_KEY = process.env.ALCHEMY_KEY
 const API_KEY_SCAN = process.env.API_KEY_SCAN ?? ''
 const DEPLOYER_WALLET_PRIVATE_KEY =
-  process.env.DEPLOYER_WALLET_PRIVATE_KEY ?? ''
+  process.env.DEPLOYER_WALLET_PRIVATE_KEY === ''
+    ? '0000000000000000000000000000000000000000000000000000000000000000'
+    : process.env.DEPLOYER_WALLET_PRIVATE_KEY
 const URL_RPC_MAINNET = process.env.URL_RPC_MAINNET ?? ''
 const URL_RPC_TESTNET = process.env.URL_RPC_TESTNET ?? ''
 const URL_RPC_LOCAL = process.env.URL_RPC_LOCAL ?? ''
+
+console.log(DEPLOYER_WALLET_PRIVATE_KEY)
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
