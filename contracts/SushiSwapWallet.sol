@@ -6,6 +6,8 @@ import './interfaces/IUniswapV2Router02.sol';
 import './libraries/UniswapV2Library.sol';
 import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
 
+error InsufficientBalance();
+
 contract SushiSwapWallet {
     address private constant ROUTER =
         0xd9e1cE17f2641f24aE83637ab66a2cca9C378B9F;
@@ -16,9 +18,6 @@ contract SushiSwapWallet {
 
     address private constant FACTORY =
         0xC0AEe478e3658e2610c5F7A4A2E1777cE9e4f2Ac;
-
-    string private constant REVERT_INSUFFICIENT_BALANCE =
-        'Insufficient balance.';
 
     mapping(address => mapping(address => uint256)) public balances;
 
@@ -121,10 +120,7 @@ contract SushiSwapWallet {
      * @param amount Minimum amount of tokens expected to own.
      */
     function _checkBalance(address token, uint256 amount) internal view {
-        require(
-            balances[msg.sender][token] >= amount,
-            REVERT_INSUFFICIENT_BALANCE
-        );
+        if (balances[msg.sender][token] < amount) revert InsufficientBalance();
     }
 
     /**
@@ -150,8 +146,8 @@ contract SushiSwapWallet {
             token2,
             amount1,
             amount2,
-            amount1 / 10,
-            amount2 / 100,
+            0,
+            0,
             address(this),
             block.timestamp
         );
