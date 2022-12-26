@@ -7,6 +7,14 @@ import 'hardhat/console.sol';
 contract WalletFactory {
     event Deployed(address address_);
 
+    /**
+     * @notice Execute function to deploy contract executing sushiswap flow in predicted address.
+     * @param bytecode Bytecode of smart contract to execute sushiswap flow concatenated with encoded
+     *  constructor arguments
+     * @dev This function use create2 opcode to deploy the contract in a address that could be predicted.
+     *  The salt is calculated with the address of the sender making impossible to create a contract in this
+     *  address if it is not deployed from this factory and triggered by the same sender.
+     */
     function walletAction(bytes calldata bytecode) public {
         bytes memory implInitCode = bytecode;
         bytes32 salt = bytes32(uint256(uint160(msg.sender)) << 96);
