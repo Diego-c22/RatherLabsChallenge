@@ -19,7 +19,7 @@ exports.executeWithSLPTokenAddress = () => {
           SLP,
           globalThis.signers[0].address
         )
-      ).to.revertedWith('Insufficient balance.')
+      ).to.revertedWithCustomError
     })
 
     it("Should decrease user's token 1 balance", async () => {
