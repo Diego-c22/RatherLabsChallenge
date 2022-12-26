@@ -1,4 +1,3 @@
-const { ethers } = require('hardhat')
 const fs = require('fs')
 const { FACTORY } = require('../data/addresses.json').mainnet
 
