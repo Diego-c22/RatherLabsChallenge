@@ -16,8 +16,6 @@ const URL_RPC_MAINNET = process.env.URL_RPC_MAINNET ?? ''
 const URL_RPC_TESTNET = process.env.URL_RPC_TESTNET ?? ''
 const URL_RPC_LOCAL = process.env.URL_RPC_LOCAL ?? ''
 
-console.log(DEPLOYER_WALLET_PRIVATE_KEY)
-
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   solidity: '0.8.9',

@@ -10,7 +10,7 @@ SushiSwap liquidity program usually takes 5 transactions:
     4. Approve SLP token
     5. Deposit SLP token
 
-This is a process very expensive taking around 498136 wei to be completed:
+This is a very expensive process costing around 498136 wei of gas to be completed:
 
 | Method            | Gas Used |
 | ----------------- | -------- |
@@ -21,37 +21,37 @@ This is a process very expensive taking around 498136 wei to be completed:
 | Deposit           | 187845   |
 | Total             | 498136   |
 
-Table generated with sushiswap process simulation:
+Table generated with sushiswap simulation process:
 `npx hardhat report`
 
 To improve this process we can compress it in a single transaction.
-Using `execute` in [SushiSwapWallet.sol](contracts/SushiSwapWallet.sol) we can save around **70.51 %** of gas cost. It uses an average gas of 147,387.
+Using `execute` in [SushiSwapWallet.sol](contracts/SushiSwapWallet.sol) we can save around **70.51 %** of the cost incurred for gas. It uses an average gas of 147,387 wei.
 
-SushiSwap use a library to calculate SLP tokens addresses, the same that is used in the previous method, but we can calculate it off-chain and send it as parameter to avoid extra calls to the library as is done in the method `executeWithSLPTokenAddress` found in [SushiSwapWallet.sol](contracts/SushiSwapWallet.sol). Using this method we can save around **71%** of gas cost. It uses an average gas of 145,962.
+SushiSwap uses a library to calculate SLP tokens' addresses, the same that is used in the previous method, but we can calculate it off-chain and send it as parameter to avoid extra calls to the library as is done in the method `executeWithSLPTokenAddress` found in [SushiSwapWallet.sol](contracts/SushiSwapWallet.sol). Using this method we can save around **71%** of the cost incurred for gas. It uses an average gas of 145,962 wei.
 
-Both of these methods are very efficient, but they have some disadvantages. The more significant is that these methods require to deposit your tokens inside a smart contract. It means, that in any moment we would have to execute two transactions to deposit our tokens:
+Both of these methods are very efficient, but they have some disadvantages. The more significant one is that these methods require to deposit your tokens inside a smart contract. It means that, in any moment we would have to execute two transactions to deposit our tokens:
 
 1. to approve our tokens [approve](https://docs.openzeppelin.com/contracts/2.x/api/token/erc20#IERC20-approve-address-uint256-)
 2. to deposit tokens [deposit](contracts/SushiSwapWallet.sol)
 
 Another fact that usually is not considered is how users get their tokens.
-The most common process is to transfer tokens from a centralized exchange to a crypto wallet. Once the tokens are in the crypto wallet, users start to interact with smart contracts. This implies that users have to execute and pay one transaction more.
+The most common process is to transfer tokens from a centralized exchange to a crypto wallet. Once the tokens are in the crypto wallet, users start to interact with smart contracts. This implies that, users have to execute and pay for one more transaction.
 
 ![Process](assets/img/process.png)
 
 To solve this problem we can use a contract that destroys itself each time it is executed such as [SelfDestructWallet](contracts/SelfDestructWallet.sol).
-[SelfDestructWallet](contracts/SelfDestructWallet.sol). It executes Sushiswap liquidity program flow and when it ends the contract is destroyed. To execute this contract we use a [WalletFactory](contracts/WalletFactory.sol) that deploys one instance of [SelfDestructWallet](contracts/SelfDestructWallet.sol) each time an user want to deposit their tokens. To deploy the wallet, [WalletFactory.sol](contracts/WalletFactory.sol) uses [CREATE2 opcode](https://eips.ethereum.org/EIPS/eip-1014) allowing to generate a unique address for each user for each pool he wants to deposit their tokens.
-Using this pattern is more expensive than te previous methods due to the deployment of a wallet each time a user executes the actions. It takes 166,379 wei gas costs to execute, saving around 5% less than the previous methods, but still saving **66.75%** gas cost against sushiswap process.
+[SelfDestructWallet](contracts/SelfDestructWallet.sol). It executes Sushiswap liquidity program flow and when it ends, the contract is destroyed. To execute this contract we use a [WalletFactory](contracts/WalletFactory.sol) that deploys one instance of [SelfDestructWallet](contracts/SelfDestructWallet.sol) each time a user wants to deposit their tokens. To deploy the wallet, [WalletFactory.sol](contracts/WalletFactory.sol) uses [CREATE2 opcode](https://eips.ethereum.org/EIPS/eip-1014) allowing it to generate a unique address for each user for each pool he wants to deposit their tokens.
+Using this pattern is more expensive than the previous methods due to the deployment of a wallet each time a user executes the actions. It costs 166,379 wei of gas to execute, saving around 5% less than the previous methods, but still saving **66.75%** cost incurred for gas against sushiswap process.
 
-Nevertheless, using this pattern give use an huge amount of advantages:
+Nevertheless, using this pattern gives us a huge amount of advantages:
 
-- We can calculate the resulting address off-chain. There is not need of make any transaction util user wants to apply in the liquidity program, allowing users to save their tokens in that address even if they have no executed the wallet creation.
-- We don't have to save data in storage because the contract is self destructed.
-- [CREATE2 opcode](https://eips.ethereum.org/EIPS/eip-1014) uses three parameters to calculate the address, address of executor (WalletFactory), salt(sender address), and bytecode(bytecode of [SelfDestructWallet](contracts/SelfDestructWallet.sol)). It means that the address can be accessed if it is not by our factory executed for the same user.
+- We can calculate the resulting address off-chain. There is no need of make any transaction util user wants to apply in the liquidity program, allowing users to save their tokens in that address even if they have not executed the wallet creation.
+- We don't have to save data in storage because the contract is self-destructive.
+- [CREATE2 opcode](https://eips.ethereum.org/EIPS/eip-1014) uses three parameters to calculate the address, address of executor (WalletFactory), salt(sender's address), and bytecode(bytecode of [SelfDestructWallet](contracts/SelfDestructWallet.sol)). It means that the address can be accessed if it is not by our factory executed for the same user.
 - We don't have to worry about security because the address doesn't have code.
-- User can save their tokens in that address because only he can deploy contracts in that address
+- User can save their tokens in that address because only he can deploy contracts in that address.
 - User can transfer their tokens from any exchange or wallet to that address avoiding to use [approve](https://docs.openzeppelin.com/contracts/2.x/api/token/erc20#IERC20-approve-address-uint256-) or fall in transfer tokens from exchange to wallet, wallet to contract.
-- Users can know their balance in their balance in their SelfDestructWallet in any system supporting [ERC20 standard](https://docs.openzeppelin.com/contracts/4.x/erc20).
+- Users can know their balance in their SelfDestructWallet in any system supporting [ERC20 standard](https://docs.openzeppelin.com/contracts/4.x/erc20).
 
 ![Report](assets/img/report.png)
 
@@ -78,7 +78,7 @@ Report generated with `npx hardhat test`
   ```
     touch .env
   ```
-- Copy content from .env-example and fill the environment variables
+- Copy content from .env-example and fill the environmental variables
 
 ```
 API_KEY_SCAN=
@@ -110,7 +110,7 @@ ALCHEMY_KEY=EJLlMf9dNveQsv_r8QNUeNedMXOb2XtA
 npx hardhat sync
 ```
 
-NOTE: This command execute a task that retrieve all the liquidity pool stored in MasterChefV1 and MasterChefV2 and save them in a json file. This is just for testing propose, in a real environment Liquidity Pools must be stored in a data base with a event listener that detects when a new pool has been created to ensure data is always up to date.
+NOTE: This command execute a task that retrieve all the liquidity pool stored in MasterChefV1 and MasterChefV2 and save them in a json file. This is just for testing purpose, in a real environment Liquidity Pools must be stored in a data base with an event listener that detects when a new pool has been created to ensure data is always up to date.
 
 5. Run tests
 
