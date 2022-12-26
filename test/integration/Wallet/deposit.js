@@ -31,11 +31,7 @@ exports.depositIT = () => {
       const contract = globalThis.walletContract
       const address = contract.address
       const balance = await contract.provider.getBalance(address)
-
-      console.log(balance)
-
       await contract.deposit(AddressZero, 0, { value })
-
       expect(await contract.provider.getBalance(address)).to.be.equals(
         value.add(balance)
       )
