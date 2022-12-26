@@ -62,7 +62,7 @@ Report generated with `npx hardhat test`
 1. Open terminal and clone github project
 
 ```
-    https://github.com/Diego-c22/RatherLabsChallenge.git
+    git clone https://github.com/Diego-c22/RatherLabsChallenge.git
     cd RatherLabsChallenge
 ```
 
