@@ -1,97 +1,3 @@
-# RatherLabs Challenge
-
-## Running Project
-
-1. Open terminal and clone github project
-
-```
-    https://github.com/Diego-c22/RatherLabsChallenge.git
-    cd RatherLabsChallenge
-```
-
-2. Install packages
-
-```
-    npm install
-```
-
-3. Set environment
-
-- Create .env file in the root directory
-  ```
-    touch .env
-  ```
-- Copy content from .env-example and fill the environment variables
-
-```
-API_KEY_SCAN=
-URL_RPC_TESTNET=
-DEPLOYER_WALLET_PRIVATE_KEY=
-URL_RPC_LOCAL=
-URL_RPC_MAINNET=
-ALCHEMY_KEY=
-```
-
-`API_KEY_SCAN` OPTIONAL. Block explorer key. Required to verify contracts.
-
-`URL_RPC_TESTNET` OPTIONAL. Required to deploy and interact with contracts in testnet network.
-
-`URL_RPC_LOCAL` OPTIONAL. Required to deploy and interact with contracts in local network.
-
-`URL_RPC_MAINNET` OPTIONAL. Required to deploy and interact with contracts in mainnet network.
-`DEPLOYER_WALLET_PRIVATE_KEY` OPTIONAL. Required to deploy and interact with contracts outside of hardhat network (local, testnet, mainnet).
-
-`ALCHEMY_KEY` REQUIRED. Alchemy key for Ethereum Mainnet Network. Required to fork mainnet network. If you do not have an account use the next key:
-
-```
-ALCHEMY_KEY=EJLlMf9dNveQsv_r8QNUeNedMXOb2XtA
-```
-
-4. Sync SushiSwap Liquidity Pools
-
-```
-npx hardhat sync
-```
-
-NOTE: This command execute a task that retrieve all the liquidity pool stored in MasterChefV1 and MasterChefV2 and save them in a json file. This is just for testing propose, in a real environment Liquidity Pools must be stored in a data base with a event listener that detects when a new pool has been created to ensure data is always up to date.
-
-5. Run tests
-
-- Running all tests
-
-  ```
-  npx hardhat test
-  ```
-
-- Running unit tests
-
-  ```
-  npx hardhat test test/unit
-  ```
-
-- Running integration tests
-
-  ```
-  npx hardhat test test/integration
-  ```
-
-Available Commands:
-
-```shell
-npx hardhat check
-npx hardhat clean
-npx hardhat compile
-npx hardhat coverage
-npx hardhat docgen
-npx hardhat flatten
-npx hardhat help
-npx hardhat test
-npx hardhat node
-npx hardhat sync
-npx hardhat verify
-npx hardhat report
-```
-
 # Solidity API
 
 ## WalletFactory
@@ -111,14 +17,14 @@ function walletAction(bytes bytecode) public
 Execute function to deploy contract executing sushiswap flow in predicted address.
 
 _This function use create2 opcode to deploy the contract in a address that could be predicted.
-The salt is calculated with the address of the sender making impossible to create a contract in this
-address if it is not deployed from this factory and triggered by the same sender._
+ The salt is calculated with the address of the sender making impossible to create a contract in this
+ address if it is not deployed from this factory and triggered by the same sender._
 
 #### Parameters
 
-| Name     | Type  | Description                                                                                          |
-| -------- | ----- | ---------------------------------------------------------------------------------------------------- |
-| bytecode | bytes | Bytecode of smart contract to execute sushiswap flow concatenated with encoded constructor arguments |
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| bytecode | bytes | Bytecode of smart contract to execute sushiswap flow concatenated with encoded  constructor arguments |
 
 ## InsufficientBalance
 
@@ -167,14 +73,14 @@ function deposit(address token_, uint256 amount_) external payable
 Allow add funds to user wallet.
 
 _To use native currency set token_ as address(0).
-When native currency is used, amount* is ignored and is taken msg.value.*
+When native currency is used, amount_ is ignored and is taken msg.value._
 
 #### Parameters
 
-| Name     | Type    | Description                  |
-| -------- | ------- | ---------------------------- |
-| token\_  | address | Address of token to deposit. |
-| amount\_ | uint256 | Amount of tokens to deposit. |
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| token_ | address | Address of token to deposit. |
+| amount_ | uint256 | Amount of tokens to deposit. |
 
 ### execute
 
@@ -183,25 +89,24 @@ function execute(address token1, address token2, uint256 amount1, uint256 amount
 ```
 
 Execute SushiSwap deposit SLP tokens flow.
-
-1.  Approve token 1 to SushiSwapRouter contract.
-2.  Approve token 2 to SushiSwapRouter contract.
-3.  AddLiquidity to pool.
-4.  Approve SLP token to MasterChef contract.
-5.  Deposit tokens.
+ 1. Approve token 1 to SushiSwapRouter contract.
+ 2. Approve token 2 to SushiSwapRouter contract.
+ 3. AddLiquidity to pool.
+ 4. Approve SLP token to MasterChef contract.
+ 5. Deposit tokens.
 
 _If 'to' is different to address(0) it will be used MasterChefV2._
 
 #### Parameters
 
-| Name    | Type    | Description                                                     |
-| ------- | ------- | --------------------------------------------------------------- |
-| token1  | address | Address of first token in the liquidity pool.                   |
-| token2  | address | Address of second token in the liquidity pool.                  |
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| token1 | address | Address of first token in the liquidity pool. |
+| token2 | address | Address of second token in the liquidity pool. |
 | amount1 | uint256 | Amount of tokens desired for first token in the liquidity pool. |
-| amount2 | uint256 |                                                                 |
-| pid     | uint256 | PID of liquidity pool.                                          |
-| to      | address | Address to use as depositor                                     |
+| amount2 | uint256 |  |
+| pid | uint256 | PID of liquidity pool. |
+| to | address | Address to use as depositor |
 
 ### executeWithSLPTokenAddress
 
@@ -209,29 +114,28 @@ _If 'to' is different to address(0) it will be used MasterChefV2._
 function executeWithSLPTokenAddress(address token1, address token2, uint256 amount1, uint256 amount2, uint256 pid, address token, address to) external
 ```
 
-Execute SushiSwap deposit SLP tokens flow. - Use this function when SLP token address is calculated off-chain to save gas.
-
-1.  Approve token 1 to SushiSwapRouter contract.
-2.  Approve token 2 to SushiSwapRouter contract.
-3.  AddLiquidity to pool.
-4.  Approve SLP token to MasterChef contract.
-5.  Deposit tokens.
-
-- @dev If 'to' is different to address(0) it will be used MasterChefV2.
+Execute SushiSwap deposit SLP tokens flow.
+     - Use this function when SLP token address is calculated off-chain to save gas.
+ 1. Approve token 1 to SushiSwapRouter contract.
+ 2. Approve token 2 to SushiSwapRouter contract.
+ 3. AddLiquidity to pool.
+ 4. Approve SLP token to MasterChef contract.
+ 5. Deposit tokens.
+* @dev If 'to' is different to address(0) it will be used MasterChefV2.
 
 #### Parameters
 
-| Name    | Type    | Description                                                     |
-| ------- | ------- | --------------------------------------------------------------- |
-| token1  | address | Address of first token in the liquidity pool.                   |
-| token2  | address | Address of second token in the liquidity pool.                  |
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| token1 | address | Address of first token in the liquidity pool. |
+| token2 | address | Address of second token in the liquidity pool. |
 | amount1 | uint256 | Amount of tokens desired for first token in the liquidity pool. |
-| amount2 | uint256 |                                                                 |
-| pid     | uint256 | PID of liquidity pool.                                          |
-| token   | address | SLP token address.                                              |
-| to      | address | Address to use as depositor                                     |
+| amount2 | uint256 |  |
+| pid | uint256 | PID of liquidity pool. |
+| token | address | SLP token address. |
+| to | address | Address to use as depositor |
 
-### \_checkBalance
+### _checkBalance
 
 ```solidity
 function _checkBalance(address token, uint256 amount) internal view
@@ -241,50 +145,48 @@ Verify if user has enough balance.
 
 #### Parameters
 
-| Name   | Type    | Description                               |
-| ------ | ------- | ----------------------------------------- |
-| token  | address | Address of token to check.                |
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| token | address | Address of token to check. |
 | amount | uint256 | Minimum amount of tokens expected to own. |
 
-### \_addLiquidity
+### _addLiquidity
 
 ```solidity
 function _addLiquidity(address token1, address token2, uint256 amount1, uint256 amount2) internal
 ```
 
 Add liquidity to SushiSwap liquidity pool.
-
-1.  Approve token 1 to SushiSwapRouter contract.
-2.  Approve token 2 to SushiSwapRouter contract.
-3.  AddLiquidity to pool.
+ 1. Approve token 1 to SushiSwapRouter contract.
+ 2. Approve token 2 to SushiSwapRouter contract.
+ 3. AddLiquidity to pool.
 
 #### Parameters
 
-| Name    | Type    | Description                                                     |
-| ------- | ------- | --------------------------------------------------------------- |
-| token1  | address | Address of first token in the liquidity pool.                   |
-| token2  | address | Address of second token in the liquidity pool.                  |
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| token1 | address | Address of first token in the liquidity pool. |
+| token2 | address | Address of second token in the liquidity pool. |
 | amount1 | uint256 | Amount of tokens desired for first token in the liquidity pool. |
-| amount2 | uint256 |                                                                 |
+| amount2 | uint256 |  |
 
-### \_deposit
+### _deposit
 
 ```solidity
 function _deposit(address token, uint256 pid, address to) internal
 ```
 
 Deposit SLP tokens in SushiSwap MasterChef.
-
-1.  Approve SLP token to MasterChef contract.
-2.  Deposit tokens.
+ 1. Approve SLP token to MasterChef contract.
+ 2. Deposit tokens.
 
 #### Parameters
 
-| Name  | Type    | Description            |
-| ----- | ------- | ---------------------- |
-| token | address | SLP token address      |
-| pid   | uint256 | PID of liquidity pool. |
-| to    | address |                        |
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| token | address | SLP token address |
+| pid | uint256 | PID of liquidity pool. |
+| to | address |  |
 
 ## IMasterChef
 
@@ -292,8 +194,8 @@ Deposit SLP tokens in SushiSwap MasterChef.
 
 ```solidity
 struct UserInfo {
-uint256 amount;
-uint256 rewardDebt;
+  uint256 amount;
+  uint256 rewardDebt;
 }
 ```
 
@@ -301,10 +203,10 @@ uint256 rewardDebt;
 
 ```solidity
 struct PoolInfo {
-address lpToken;
-uint256 allocPoint;
-uint256 lastRewardBlock;
-uint256 accSushiPerShare;
+  address lpToken;
+  uint256 allocPoint;
+  uint256 lastRewardBlock;
+  uint256 accSushiPerShare;
 }
 ```
 
@@ -569,24 +471,23 @@ constructor(address token1, address token2, uint256 pid, address token, address 
 ```
 
 Execute SushiSwap deposit SLP tokens flow and at the end is self destructed.
-
-1.  Approve token 1 to SushiSwapRouter contract.
-2.  Approve token 2 to SushiSwapRouter contract.
-3.  AddLiquidity to pool.
-4.  Approve SLP token to MasterChef contract.
-5.  Deposit tokens.
+ 1. Approve token 1 to SushiSwapRouter contract.
+ 2. Approve token 2 to SushiSwapRouter contract.
+ 3. AddLiquidity to pool.
+ 4. Approve SLP token to MasterChef contract.
+ 5. Deposit tokens.
 
 _If 'to' is different to address(0) it will be used MasterChefV2._
 
 #### Parameters
 
-| Name   | Type    | Description                                    |
-| ------ | ------- | ---------------------------------------------- |
-| token1 | address | Address of first token in the liquidity pool.  |
+| Name | Type | Description |
+| ---- | ---- | ----------- |
+| token1 | address | Address of first token in the liquidity pool. |
 | token2 | address | Address of second token in the liquidity pool. |
-| pid    | uint256 | PID of liquidity pool.                         |
-| token  | address | SLP token address.                             |
-| to     | address | Address to use as depositor                    |
+| pid | uint256 | PID of liquidity pool. |
+| token | address | SLP token address. |
+| to | address | Address to use as depositor |
 
 ## Token
 
@@ -596,6 +497,3 @@ _If 'to' is different to address(0) it will be used MasterChefV2._
 constructor(string _name, string _symbol) public
 ```
 
-```
-
-```
