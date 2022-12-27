@@ -40,22 +40,24 @@ The most common process is to transfer tokens from a centralized exchange to a c
 ![Process](assets/img/process.png)
 
 To solve this problem we can use a contract that destroys itself each time it is executed such as [SelfDestructWallet](contracts/SelfDestructWallet.sol).
-[SelfDestructWallet](contracts/SelfDestructWallet.sol). It executes Sushiswap liquidity program flow and when it ends, the contract is destroyed. To execute this contract we use a [WalletFactory](contracts/WalletFactory.sol) that deploys one instance of [SelfDestructWallet](contracts/SelfDestructWallet.sol) each time a user wants to deposit their tokens. To deploy the wallet, [WalletFactory.sol](contracts/WalletFactory.sol) uses [CREATE2 opcode](https://eips.ethereum.org/EIPS/eip-1014) allowing it to generate a unique address for each user for each pool he wants to deposit their tokens.
+It executes Sushiswap liquidity program flow and when it ends, the contract is destroyed. To execute this contract we use a [WalletFactory](contracts/WalletFactory.sol) that deploys one instance of [SelfDestructWallet](contracts/SelfDestructWallet.sol) each time a user wants to deposit their tokens. To deploy the wallet, [WalletFactory.sol](contracts/WalletFactory.sol) uses [CREATE2 opcode](https://eips.ethereum.org/EIPS/eip-1014) allowing it to generate a unique address for each user for each pool he wants to deposit their tokens.
 Using this pattern is more expensive than the previous methods due to the deployment of a wallet each time a user executes the actions. It costs 166,379 wei of gas to execute, saving around 5% less than the previous methods, but still saving **66.75%** cost incurred for gas against sushiswap process.
 
 Nevertheless, using this pattern gives us a huge amount of advantages:
 
 - We can calculate the resulting address off-chain. There is no need of make any transaction util user wants to apply in the liquidity program, allowing users to save their tokens in that address even if they have not executed the wallet creation.
 - We don't have to save data in storage because the contract is self-destructive.
-- [CREATE2 opcode](https://eips.ethereum.org/EIPS/eip-1014) uses three parameters to calculate the address, address of executor (WalletFactory), salt(sender's address), and bytecode(bytecode of [SelfDestructWallet](contracts/SelfDestructWallet.sol)). It means that the address can be accessed if it is not by our factory executed for the same user.
-- We don't have to worry about security because the address doesn't have code.
-- User can save their tokens in that address because only he can deploy contracts in that address.
+- [CREATE2 opcode](https://eips.ethereum.org/EIPS/eip-1014) uses three parameters to calculate the address, address of executor (WalletFactory), salt(sender's address), and bytecode(bytecode of [SelfDestructWallet](contracts/SelfDestructWallet.sol)). It means that the address cannot be accessed if it is not by our factory executed for the same user.
+- We don't have to worry about security because the address doesn't have code to execute.
+- User can save their tokens in that address because only he can deploy contracts in that address through the [WalletFactory](contracts/WalletFactory.sol).
 - User can transfer their tokens from any exchange or wallet to that address avoiding to use [approve](https://docs.openzeppelin.com/contracts/2.x/api/token/erc20#IERC20-approve-address-uint256-) or fall in transfer tokens from exchange to wallet, wallet to contract.
 - Users can know their balance in their SelfDestructWallet in any system supporting [ERC20 standard](https://docs.openzeppelin.com/contracts/4.x/erc20).
 
 ![Report](assets/img/report.png)
 
 Report generated with `npx hardhat test`
+
+[Live Demo (coming soon)]()
 
 ## Running Project
 
