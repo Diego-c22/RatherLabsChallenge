@@ -57,7 +57,7 @@ Nevertheless, using this pattern gives us a huge amount of advantages:
 
 Report generated with `npx hardhat test`
 
-[Live Demo (coming soon)]()
+[Live Demo (coming soon)](https://sushiswap.blockchainspace.art/)
 
 ## Running Project
 
