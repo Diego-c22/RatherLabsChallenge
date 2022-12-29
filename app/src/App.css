@@ -11,6 +11,11 @@ body {
   background-size: 300% 300%;
 }
 
+.scroll-text {
+  transform: translateX(-100%);
+  animation: text-scroll 15s linear infinite;
+}
+
 @keyframes gradient {
   0% {
     background-position: 0% 50%;
@@ -22,5 +27,19 @@ body {
 
   100% {
     background-position: 0% 50%;
+  }
+}
+
+@keyframes text-scroll {
+  from {
+    -moz-transform: translateX(-100%);
+    -webkit-transform: translateX(-100%);
+    transform: translateX(-100%);
+  }
+
+  to {
+    -moz-transform: translateX(100%);
+    -webkit-transform: translateX(100%);
+    transform: translateX(100%);
   }
 }

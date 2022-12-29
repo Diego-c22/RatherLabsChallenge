@@ -42,8 +42,14 @@ const App = () => {
   return (
     <div className="App bg-[#131a2a]">
       <Header />
+      <div className="bg-red-600/40 text-white text-center p-1 text-xs md:text-sm overflow-hidden min-w-[350px]">
+        <div className="text-right scroll-text w-full">
+          {' '}
+          Website in development state. Don't sign any transaction.
+        </div>
+      </div>
       <div className="h-[95vh] w-screen flex justify-center items-center bg-[#131a2a]">
-        <div className="flex flex-col bg-gradient-to-tl from-sky-900/40 to-purple-800/20 py-24 px-10 w-1/3 rounded-2xl gradient shadow-xl  shadow-black">
+        <div className="flex flex-col bg-gradient-to-tl from-sky-900/40 to-purple-800/20 py-24 px-10 w-11/12 lg:w-1/2 2xl:w-1/3 rounded-2xl gradient shadow-xl  shadow-black">
           {pool && (
             <div className="text-white/80 font-extralight mb-4">
               <p className="text-xs">Pool:</p>
